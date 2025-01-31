@@ -1,9 +1,12 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from .models import Product
 
 
 def home(requests):
-    return render(requests, "catalog/home.html")
+    products = Product.objects.all()
+    print(products)
+    return render(requests, "catalog/home.html", {'products': products})
 
 
 def contacts(requests):

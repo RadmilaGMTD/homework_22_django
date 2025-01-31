@@ -41,6 +41,24 @@
                 </div>
             </div>
         </div>
+        <div class="col-4">
+            <div class="card mb-4 box-shadow">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">Наши продукты</h4>
+                </div>
+                <div class="card-body">
+                    {% for product in products %}
+                    <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <strong>{{ product.name }}</strong>
+                    <span>{{ product.price }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+                    <button type="button" class="btn btn-lg btn-block btn-outline-primary">Купить</button>
+                </div>
+                </div>
+            </div>
     </div>
 
     <footer class="pt-4 my-md-5 pt-md-5 border-top">
