@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "catalog"
+    "catalog",
 ]
 
 MIDDLEWARE = [
@@ -132,9 +132,8 @@ STATIC_URL = "static/"
 STATICFILES_DIRS = [
     # Здесь вы можете добавить пути к вашим статическим файлам,
     # если они располагаются вне приложений
-    BASE_DIR / 'static'
+    BASE_DIR
+    / "static"
 ]
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-
