@@ -1,0 +1,29 @@
+[
+{
+    "model": "catalog.contact",
+    "pk": 1,
+    "fields": {
+        "name": "Светлана",
+        "phone": "12345667",
+        "message": "По вопросам, касающихся стоимости продуктов"
+    }
+},
+{
+    "model": "catalog.contact",
+    "pk": 2,
+    "fields": {
+        "name": "Аркадий",
+        "phone": "23456",
+        "message": "Ответственный за жалобы и предложения"
+    }
+},
+{
+    "model": "catalog.contact",
+    "pk": 3,
+    "fields": {
+        "name": "Мирослав",
+        "phone": "111111",
+        "message": "Другие вопросы"
+    }
+}
+]

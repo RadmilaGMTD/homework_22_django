@@ -1,19 +1,21 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Product
+from .models import Product, Contact
 
 
-def home(requests):
-    products = Product.objects.all()
+def home(request):
+    products = Product.objects.order_by("created_at")[:5]
     print(products)
-    return render(requests, "catalog/home.html", {'products': products})
+    return render(request, "catalog/home.html", {'products': products})
 
 
-def contacts(requests):
-    if requests.method == "POST":
-        name = requests.POST.get("name")
-        phone = requests.POST.get("phone")
-        message = requests.POST.get("message")
+def contacts(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        phone = request.POST.get("phone")
+        message = request.POST.get("message")
         print(name, phone, message)
         return HttpResponse(f"Спасибо, {name}! Ваш номер телефона и сообщение получено.")
-    return render(requests, "catalog/contacts.html")
+    contact = Contact.objects.all()
+    print(contact)
+    return render(request, "catalog/contacts.html", {"contacts": contact})
