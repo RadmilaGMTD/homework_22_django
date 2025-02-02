@@ -20,8 +20,7 @@ class CategoryAdmin(admin.ModelAdmin):
 class ContactAdmin(admin.ModelAdmin):
     list_display = (
         "id",
-        "name",
+        "address",
         "phone",
-        "message",
+        "email",
     )
-    search_fields = ("name",)

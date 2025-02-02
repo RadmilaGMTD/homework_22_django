@@ -9,5 +9,5 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         # Удаляем существующие записи
         Contact.objects.all().delete()
-        call_command("loaddata", "contact_fixture.json")
+        call_command("loaddata", "contacts_fixture.json")
         self.stdout.write(self.style.SUCCESS("Successfully loaded data from fixture"))
