@@ -16,6 +16,6 @@ def contacts(request):
         message = request.POST.get("message")
         print(name, phone, message)
         return HttpResponse(f"Спасибо, {name}! Ваш номер телефона и сообщение получено.")
-    contact = Contact.objects.all()
+    contact = Contact.objects.first()
     print(contact)
     return render(request, "catalog/contacts.html", {"contacts": contact})

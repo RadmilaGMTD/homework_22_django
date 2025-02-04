@@ -42,18 +42,11 @@
                 <div class="row text mt-3 mx-2 mb-2">
         <div class="col-12">
             <h4>Контактные данные</h4>
-            {% if contacts %}
             <ul>
-            {% for contact in contacts %}
-            <li>Адрес: {{contact.address}}</li>
-            <li>Телефон: {{contact.phone}}</li>
-            <li>Электронная почта: {{contact.email}}</li>
-            <hr>
-        {% endfor %}
+            <li>Адрес: {{contacts.address}}</li>
+            <li>Телефон: {{contacts.phone}}</li>
+            <li>Электронная почта: {{contacts.email}}</li>
     </ul>
-            {% else %}
-    <p>Контактная информация отсутствует.</p>
-{% endif %}
         </div>
     </div>
             </div>
