@@ -1,0 +1,11 @@
+[
+{
+    "model": "catalog.contact",
+    "pk": 1,
+    "fields": {
+        "address": "г. Москва, ул. Ленина 45",
+        "phone": "12345667",
+        "email": "test_email@mai.ru"
+    }
+}
+]

@@ -34,13 +34,13 @@ class Product(models.Model):
 
 
 class Contact(models.Model):
-    name = models.CharField(max_length=50, verbose_name="Имя")
+    address = models.CharField(max_length=255, verbose_name="Адрес", null=True, blank=True)
     phone = models.CharField(max_length=20, verbose_name="Номер телефона")
-    message = models.TextField(verbose_name="Сообщение", null=True, blank=True)
+    email = models.EmailField(verbose_name="Электронная почта", null=True, blank=True)
 
     class Meta:
-        verbose_name = "Контакт"
-        verbose_name_plural = "Контакты"
+        verbose_name = "Контакт магазина"
+        verbose_name_plural = "Контакты магазина"
 
     def __str__(self):
-        return f"{self.name} {self.phone}"
+        return f"{self.address} {self.phone}"

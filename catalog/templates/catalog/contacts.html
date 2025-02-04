@@ -42,18 +42,11 @@
                 <div class="row text mt-3 mx-2 mb-2">
         <div class="col-12">
             <h4>Контактные данные</h4>
-            <ul class="list-group">
-                {% for contact in contacts %}
-                    <li class="list-group-item">
-                        <strong>{{contact.name}}</strong>
-                        <br>
-                        Телефон: {{contact.phone}}<br>
-                        Сообщение: {{contact.message}}
-                    </li>
-                {% empty %}
-                    <li class="list-group-item">Нет доступных контактов.</li>
-                {% endfor %}
-            </ul>
+            <ul>
+            <li>Адрес: {{contacts.address}}</li>
+            <li>Телефон: {{contacts.phone}}</li>
+            <li>Электронная почта: {{contacts.email}}</li>
+    </ul>
         </div>
     </div>
             </div>
