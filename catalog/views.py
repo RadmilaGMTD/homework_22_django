@@ -1,12 +1,27 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Product, Contact
+from django.core.paginator import Paginator
 
 
 def home(request):
-    paid_products = Product.objects.filter(category__name="Платные занятия")
-    free_products = Product.objects.filter(category__name="Бесплатные занятия")
-    return render(request, "catalog/home.html", {'paid_products': paid_products, 'free_products': free_products})
+    paid_products = Product.objects.filter(category__is_paid=True)
+    free_products = Product.objects.filter(category__is_paid=False)
+
+    # Пагинация для платных продуктов
+    paid_paginator = Paginator(paid_products, 10)  # 10 товаров на страницу
+    paid_page_number = request.GET.get('page_paid')
+    paid_page_obj = paid_paginator.get_page(paid_page_number)
+
+    # Пагинация для бесплатных продуктов
+    free_paginator = Paginator(free_products, 10)  # 10 товаров на страницу
+    free_page_number = request.GET.get('page_free')
+    free_page_obj = free_paginator.get_page(free_page_number)
+
+    return render(request, "catalog/home.html", {
+        'paid_products': paid_page_obj,
+        'free_products': free_page_obj,
+    })
 
 
 def contacts(request):
