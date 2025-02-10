@@ -5,17 +5,16 @@ from django.core.paginator import Paginator
 
 
 def home(request):
+
     paid_products = Product.objects.filter(category__is_paid=True)
     free_products = Product.objects.filter(category__is_paid=False)
 
-    # Пагинация для платных продуктов
-    paid_paginator = Paginator(paid_products, 10)  # 10 товаров на страницу
-    paid_page_number = request.GET.get('page_paid')
+    paid_paginator = Paginator(paid_products, 10)
+    paid_page_number = request.GET.get('paid_page')
     paid_page_obj = paid_paginator.get_page(paid_page_number)
 
-    # Пагинация для бесплатных продуктов
-    free_paginator = Paginator(free_products, 10)  # 10 товаров на страницу
-    free_page_number = request.GET.get('page_free')
+    free_paginator = Paginator(free_products, 10)
+    free_page_number = request.GET.get('free_page')
     free_page_obj = free_paginator.get_page(free_page_number)
 
     return render(request, "catalog/home.html", {
