@@ -1,0 +1,23 @@
+{% extends 'catalog/base.html' %}
+
+{% block title %}
+    Product Detail
+{% endblock %}
+
+{% load my_tags %}
+
+{% block content %}
+    {% include 'catalog/header.html' %}
+
+    <div class="container my-5">
+        <div class="text-center">
+            <img src="{{ product.image | media_filter }}" class="img-fluid" alt="{{ product.name }}" style="max-width: 400px; height: auto;">
+        </div>
+        <h2 class="text-center my-3">{{ product.name }}</h2>
+        <p class="text-center">Описание: {{ product.description|truncatechars:100 }}</p>
+        <p class="text-center">Цена: {{ product.price }} руб.</p>
+        <div class="text-center">
+            <a href="{% url 'catalog:home' %}" class="btn btn-lg btn-primary mt-3">Назад</a>
+        </div>
+    </div>
+{% endblock %}

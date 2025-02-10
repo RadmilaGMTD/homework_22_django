@@ -4,6 +4,7 @@ from django.db import models
 class Category(models.Model):
     name = models.CharField(max_length=50, verbose_name="Наименование категории")
     description = models.TextField(verbose_name="Описание категории")
+    is_paid = models.BooleanField(default=False, verbose_name="Платная категория")
 
     class Meta:
         verbose_name = "Категория"
