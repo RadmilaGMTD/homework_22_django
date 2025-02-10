@@ -37,3 +37,23 @@ def product_detail(request, pk):
     product = Product.objects.get(pk=pk)
     context = {"product": product}
     return render(request, "catalog/product_detail.html", context)
+
+
+def user_products(request):
+    if request.method == "POST":
+        name = request.POST.get('name')
+        description = request.POST.get('description')
+        price = request.POST.get('price')
+        image = request.FILES.get('image')
+        category_id = request.POST.get('category')
+        product = Product(
+            name=name,
+            description=description,
+            price=price,
+            image=image,
+            category_id=category_id
+        )
+        product.save()
+        return HttpResponse(f"Спасибо, Ваш продукт получен!")
+
+    return render(request, 'catalog/user_products.html')
