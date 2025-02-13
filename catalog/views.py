@@ -1,59 +1,59 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from .models import Product, Contact
 from django.core.paginator import Paginator
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, View
+from django.urls import reverse_lazy, reverse
 
 
-def home(request):
+class ProductListView(ListView):
+    model = Product
+    def get_context_data(self, **kwargs):
+        # Вызов метода get_context_data() базового класса с помощью super
+        context = super().get_context_data(**kwargs)
+        # Добавление дополнительных данных в контекст
+        paid_products = Product.objects.filter(category__is_paid=True)
+        free_products = Product.objects.filter(category__is_paid=False)
 
-    paid_products = Product.objects.filter(category__is_paid=True)
-    free_products = Product.objects.filter(category__is_paid=False)
+        paid_paginator = Paginator(paid_products, 10)
+        paid_page_number = self.request.GET.get('paid_page')
+        context['paid_products'] = paid_paginator.get_page(paid_page_number)
 
-    paid_paginator = Paginator(paid_products, 10)
-    paid_page_number = request.GET.get('paid_page')
-    paid_page_obj = paid_paginator.get_page(paid_page_number)
-
-    free_paginator = Paginator(free_products, 10)
-    free_page_number = request.GET.get('free_page')
-    free_page_obj = free_paginator.get_page(free_page_number)
-
-    return render(request, "catalog/home.html", {
-        'paid_products': paid_page_obj,
-        'free_products': free_page_obj,
-    })
+        free_paginator = Paginator(free_products, 10)
+        free_page_number = self.request.GET.get('free_page')
+        context['free_products'] = free_paginator.get_page(free_page_number)
+        return context
 
 
-def contacts(request):
-    if request.method == "POST":
+class ProductDetailView(DetailView):
+    model = Product
+
+
+class ContactView(View):
+    def get(self, request, *args, **kwargs):
+        contact = Contact.objects.first()
+        return render(request, "catalog/contacts.html", {"contacts": contact})
+
+    def post(self, request, *args, **kwargs):
         name = request.POST.get("name")
         phone = request.POST.get("phone")
         message = request.POST.get("message")
-        return HttpResponse(f"Спасибо, {name}! Ваш номер телефона и сообщение получено.")
-    contact = Contact.objects.first()
-    return render(request, "catalog/contacts.html", {"contacts": contact})
+        return HttpResponseRedirect(reverse_lazy('catalog:contacts'))
 
 
-def product_detail(request, pk):
-    product = Product.objects.get(pk=pk)
-    context = {"product": product}
-    return render(request, "catalog/product_detail.html", context)
+class ProductCreateView(CreateView):
+    model = Product
+    fields = ['name', 'description', 'price', 'image', 'category']
+    success_url = reverse_lazy('catalog:product_list')
 
 
-def user_products(request):
-    if request.method == "POST":
-        name = request.POST.get('name')
-        description = request.POST.get('description')
-        price = request.POST.get('price')
-        image = request.FILES.get('image')
-        category_id = request.POST.get('category')
-        product = Product(
-            name=name,
-            description=description,
-            price=price,
-            image=image,
-            category_id=category_id
-        )
-        product.save()
-        return HttpResponse(f"Спасибо, Ваш продукт получен!")
+class ProductUpdateView(UpdateView):
+    model = Product
+    fields = ['name', 'description', 'price', 'image', 'category']
+    def get_success_url(self):
+        return reverse('catalog:product_detail', kwargs={'pk': self.object.pk})
 
-    return render(request, 'catalog/user_products.html')
+
+class ProductDeleteView(DeleteView):
+    model = Product
+    success_url = reverse_lazy('catalog:product_list')
