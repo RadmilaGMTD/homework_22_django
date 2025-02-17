@@ -1,0 +1,28 @@
+{% extends 'blog/base_blog.html' %}
+{% block title %}Список блогов{% endblock %}
+
+{% block content %}
+    {% include 'blog/header_blog.html' %}
+    {% for blogs in object_list %}
+    <div class="row mb-2">
+        <div class="col-md-12">
+            <div class="row g-0 border rounded mb-4 shadow-sm h-md-250 position-relative">
+                <div class="col p-4 d-flex flex-column position-static">
+                    <h3 class="mb-0">{{ blogs.title }}</h3>
+                    <div class="mb-1 text-body-secondary">{{ blogs.created_at }}</div>
+                    <p class="card-text mb-auto">{{ blogs.content|truncatewords:20 }}</p>
+                    <a href="{% url 'blog:blog_detail' blogs.pk %}" class="icon-link">Продолжить чтение</a>
+                    <a href="{% url 'blog:blog_update' blogs.pk %}" class="icon-link">Редактировать</a>
+                    <a href="{% url 'blog:blog_delete' blogs.pk %}" class="icon-link">Удалить</a>
+
+                </div>
+                <div class="col-auto d-none d-lg-block">
+                    {% if blogs.image %}
+                <img src="{{ blogs.image.url }}" class="card-img-top img-fluid" style="max-height: 200px; object-fit: cover;" alt="{{ blogs.title }}">
+                {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -13,11 +13,13 @@
         <div class="text-center">
             <img src="{{ product.image | media_filter }}" class="img-fluid" alt="{{ product.name }}" style="max-width: 400px; height: auto;">
         </div>
-        <h2 class="text-center my-3">{{ product.name }}</h2>
-        <p class="text-center">Описание: {{ product.description|truncatechars:100 }}</p>
-        <p class="text-center">Цена: {{ product.price }} руб.</p>
+        <h2 class="text-center my-3">{{object.name}}</h2>
+        <p class="text-center">Описание: {{object.description|truncatechars:100 }}</p>
+        <p class="text-center">Цена: {{object.price}} руб.</p>
         <div class="text-center">
-            <a href="{% url 'catalog:home' %}" class="btn btn-lg btn-primary mt-3">Назад</a>
+            <a href="{% url 'catalog:product_update' product.pk %}" class="btn btn-lg btn-block btn-outline-primary mt-3">Редактировать</a>
+            <a href="{% url 'catalog:product_delete' product.pk %}" class="btn btn-lg btn-block btn-outline-primary mt-3">Удалить</a>
+            <a href="{% url 'catalog:product_list' %}" class="btn btn-lg btn-primary mt-3">Назад</a>
         </div>
     </div>
 {% endblock %}
