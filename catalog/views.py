@@ -8,6 +8,7 @@ from django.urls import reverse_lazy, reverse
 
 class ProductListView(ListView):
     model = Product
+
     def get_context_data(self, **kwargs):
         # Вызов метода get_context_data() базового класса с помощью super
         context = super().get_context_data(**kwargs)
@@ -16,12 +17,12 @@ class ProductListView(ListView):
         free_products = Product.objects.filter(category__is_paid=False)
 
         paid_paginator = Paginator(paid_products, 10)
-        paid_page_number = self.request.GET.get('paid_page')
-        context['paid_products'] = paid_paginator.get_page(paid_page_number)
+        paid_page_number = self.request.GET.get("paid_page")
+        context["paid_products"] = paid_paginator.get_page(paid_page_number)
 
         free_paginator = Paginator(free_products, 10)
-        free_page_number = self.request.GET.get('free_page')
-        context['free_products'] = free_paginator.get_page(free_page_number)
+        free_page_number = self.request.GET.get("free_page")
+        context["free_products"] = free_paginator.get_page(free_page_number)
         return context
 
 
@@ -38,22 +39,23 @@ class ContactView(View):
         name = request.POST.get("name")
         phone = request.POST.get("phone")
         message = request.POST.get("message")
-        return HttpResponseRedirect(reverse_lazy('catalog:contacts'))
+        return HttpResponseRedirect(reverse_lazy("catalog:contacts"))
 
 
 class ProductCreateView(CreateView):
     model = Product
-    fields = ['name', 'description', 'price', 'image', 'category']
-    success_url = reverse_lazy('catalog:product_list')
+    fields = ["name", "description", "price", "image", "category"]
+    success_url = reverse_lazy("catalog:product_list")
 
 
 class ProductUpdateView(UpdateView):
     model = Product
-    fields = ['name', 'description', 'price', 'image', 'category']
+    fields = ["name", "description", "price", "image", "category"]
+
     def get_success_url(self):
-        return reverse('catalog:product_detail', kwargs={'pk': self.object.pk})
+        return reverse("catalog:product_detail", kwargs={"pk": self.object.pk})
 
 
 class ProductDeleteView(DeleteView):
     model = Product
-    success_url = reverse_lazy('catalog:product_list')
+    success_url = reverse_lazy("catalog:product_list")

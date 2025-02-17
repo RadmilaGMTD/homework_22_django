@@ -7,23 +7,25 @@ from django.conf import settings
 
 class BlogListView(ListView):
     model = Blog
+
     def get_queryset(self):
         return Blog.objects.filter(is_publication=True)
 
 
 class BlogDetailView(DetailView):
     model = Blog
+
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
         obj.views += 1
-        obj.save(update_fields=['views'])
+        obj.save(update_fields=["views"])
 
         if obj.views == 100:
             send_mail(
-                'Поздравляем!',
+                "Поздравляем!",
                 f'Ваша статья "{obj.title}" достигла 100 просмотров!',
                 settings.DEFAULT_FROM_EMAIL,
-                ['rmiftyaeva@mail.ru'],
+                ["rmiftyaeva@mail.ru"],
                 fail_silently=False,
             )
         return obj
@@ -31,17 +33,18 @@ class BlogDetailView(DetailView):
 
 class BlogCreateView(CreateView):
     model = Blog
-    fields = ['title', 'content', 'image', 'is_publication']
-    success_url = reverse_lazy('blog:blog_list')
+    fields = ["title", "content", "image", "is_publication"]
+    success_url = reverse_lazy("blog:blog_list")
 
 
 class BlogUpdateView(UpdateView):
     model = Blog
-    fields = ['title', 'content', 'image', 'is_publication']
+    fields = ["title", "content", "image", "is_publication"]
+
     def get_success_url(self):
-        return reverse('blog:blog_detail', kwargs={'pk': self.object.pk})
+        return reverse("blog:blog_detail", kwargs={"pk": self.object.pk})
 
 
 class BlogDeleteView(DeleteView):
     model = Blog
-    success_url = reverse_lazy('blog:blog_list')
+    success_url = reverse_lazy("blog:blog_list")

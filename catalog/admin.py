@@ -17,6 +17,7 @@ class CategoryAdmin(admin.ModelAdmin):
         "is_paid",
     )
 
+
 @admin.register(Contact)
 class ContactAdmin(admin.ModelAdmin):
     list_display = (
