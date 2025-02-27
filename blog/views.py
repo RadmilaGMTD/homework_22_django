@@ -1,8 +1,10 @@
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, View
-from .models import Blog
-from django.urls import reverse_lazy, reverse
-from django.core.mail import send_mail
 from django.conf import settings
+from django.core.mail import send_mail
+from django.urls import reverse, reverse_lazy
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView, View
+
+from .forms import BlogForm
+from .models import Blog
 
 
 class BlogListView(ListView):
@@ -33,13 +35,13 @@ class BlogDetailView(DetailView):
 
 class BlogCreateView(CreateView):
     model = Blog
-    fields = ["title", "content", "image", "is_publication"]
+    form_class = BlogForm
     success_url = reverse_lazy("blog:blog_list")
 
 
 class BlogUpdateView(UpdateView):
     model = Blog
-    fields = ["title", "content", "image", "is_publication"]
+    form_class = BlogForm
 
     def get_success_url(self):
         return reverse("blog:blog_detail", kwargs={"pk": self.object.pk})

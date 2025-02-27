@@ -1,9 +1,11 @@
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
-from .models import Product, Contact
 from django.core.paginator import Paginator
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, View
-from django.urls import reverse_lazy, reverse
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from django.urls import reverse, reverse_lazy
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView, View
+
+from .forms import ProductForm
+from .models import Contact, Product
 
 
 class ProductListView(ListView):
@@ -44,13 +46,13 @@ class ContactView(View):
 
 class ProductCreateView(CreateView):
     model = Product
-    fields = ["name", "description", "price", "image", "category"]
+    form_class = ProductForm
     success_url = reverse_lazy("catalog:product_list")
 
 
 class ProductUpdateView(UpdateView):
     model = Product
-    fields = ["name", "description", "price", "image", "category"]
+    form_class = ProductForm
 
     def get_success_url(self):
         return reverse("catalog:product_detail", kwargs={"pk": self.object.pk})
