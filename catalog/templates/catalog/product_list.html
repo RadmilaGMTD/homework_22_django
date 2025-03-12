@@ -1,0 +1,103 @@
+{% extends 'catalog/base.html' %}
+{% block title %}SpeakEasy{% endblock %}
+
+{% block content %}
+{% include 'catalog/header.html' %}
+<div class="row text-center">
+    <div class="col-6">
+        <div class="card mb-4 box-shadow">
+            <div class="card-header">
+                <h4 class="my-0 font-weight-normal">Платно</h4>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    {% for product in paid_products %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <strong>{{ product.name }}</strong>
+                        <span>{{ product.price }}</span>
+                        <a href="{% url 'catalog:product_detail' product.pk %}" class="btn btn-lg btn-block btn-outline-primary mt-3">Посмотреть</a>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item">Нет платных продуктов.</li>
+                    {% endfor %}
+                </ul>
+                {% if paid_products.has_other_pages %}
+                    <nav aria-label="Pagination for paid products">
+                        <ul class="pagination justify-content-center mt-3">
+                            {% if paid_products.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?paid_page={{ paid_products.previous_page_number }}">Предыдущая</a>
+                                </li>
+                            {% endif %}
+                            {% for page in paid_products.paginator.page_range %}
+                                {% if page == paid_products.number %}
+                                    <li class="page-item active" aria-current="page">
+                                        <span class="page-link">{{ page }}</span>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?paid_page={{ page }}">{{ page }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if paid_products.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?paid_page={{ paid_products.next_page_number }}">Следующая</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6">
+        <div class="card mb-4 box-shadow">
+            <div class="card-header">
+                <h4 class="my-0 font-weight-normal">Бесплатно</h4>
+            </div>
+            <div class="card-body">
+                <ul class="list-group">
+                    {% for product in free_products %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <strong>{{product.name}}</strong>
+                        <span>{{ product.price }}</span>
+                        <a href="{% url 'catalog:product_detail' product.pk %}" class="btn btn-lg btn-block btn-outline-primary mt-3">Посмотреть</a>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item">Нет бесплатных продуктов.</li>
+                    {% endfor %}
+                </ul>
+                {% if free_products.has_other_pages %}
+                    <nav aria-label="Pagination for free products">
+                        <ul class="pagination justify-content-center mt-3">
+                            {% if free_products.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?free_page={{ free_products.previous_page_number }}">Предыдущая</a>
+                                </li>
+                            {% endif %}
+                            {% for page in free_products.paginator.page_range %}
+                                {% if page == free_products.number %}
+                                    <li class="page-item active" aria-current="page">
+                                        <span class="page-link">{{ page }}</span>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?free_page={{ page }}">{{ page }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                            {% if free_products.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?free_page={{ free_products.next_page_number }}">Следующая</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

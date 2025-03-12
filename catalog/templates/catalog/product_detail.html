@@ -1,0 +1,35 @@
+{% extends 'catalog/base.html' %}
+
+{% block title %}
+    Product Detail
+{% endblock %}
+
+{% load my_tags %}
+
+{% block content %}
+    {% include 'catalog/header.html' %}
+
+    <div class="container my-5">
+        <div class="text-center">
+            <img src="{{ product.image | media_filter }}" class="img-fluid" alt="{{ product.name }}" style="max-width: 400px; height: auto;">
+        </div>
+        <h2 class="text-center my-3">{{object.name}}</h2>
+        <p class="text-center">Описание: {{object.description|truncatechars:100 }}</p>
+        <p class="text-center">Цена: {{object.price}} руб.</p>
+        <div class="text-center">
+            {% if user == object.owner %}
+            <a href="{% url 'catalog:product_update' product.pk %}" class="btn btn-lg btn-block btn-outline-primary mt-3">Редактировать</a>
+            {% endif %}
+            {% if perms.catalog.delete_product or user == object.owner %}
+            <a href="{% url 'catalog:product_delete' product.pk %}" class="btn btn-lg btn-block btn-outline-primary mt-3">Удалить</a>
+            {% endif %}
+            <a href="{% url 'catalog:product_list' %}" class="btn btn-lg btn-primary mt-3">Назад</a>
+            {% if "catalog.can_unpublish_product" in perms %}
+            <form action="{% url 'catalog:product_unpublish' product.pk %}" method="post">
+                    {% csrf_token %}
+             <button type="submit" class="btn btn-lg btn-block btn-outline-primary mt-3">Отменить публикацию</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
