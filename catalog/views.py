@@ -1,7 +1,7 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.paginator import Paginator
-from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.http import HttpResponseForbidden, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView, View
 
@@ -50,10 +50,23 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
     form_class = ProductForm
     success_url = reverse_lazy("catalog:product_list")
 
+    def form_valid(self, form):
+        product = form.save()
+        user = self.request.user
+        product.owner = user
+        product.save()
+        return super().form_valid(form)
+
 
 class ProductUpdateView(LoginRequiredMixin, UpdateView):
     model = Product
     form_class = ProductForm
+
+    def form_valid(self, form):
+        product = self.get_object()
+        if self.request.user != product.owner:
+            return HttpResponseForbidden("У вас нет прав на редактирование продукта.")
+        return super().form_valid(form)
 
     def get_success_url(self):
         return reverse("catalog:product_detail", kwargs={"pk": self.object.pk})
@@ -62,3 +75,20 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
 class ProductDeleteView(LoginRequiredMixin, DeleteView):
     model = Product
     success_url = reverse_lazy("catalog:product_list")
+
+    def post(self, request, *args, **kwargs):
+        product = self.get_object()
+        if not (request.user == product.owner or request.user.has_perm("catalog.can_unpublish_product")):
+            return HttpResponseForbidden("У вас нет прав на удаление продукта.")
+        product.delete()
+        return redirect("catalog:product_list")
+
+
+class ProductPublicationView(PermissionRequiredMixin, View):
+    permission_required = "catalog.can_unpublish_product"
+
+    def post(self, request, pk):
+        product = get_object_or_404(Product, pk=pk)
+        product.is_published = False
+        product.save()
+        return redirect("catalog:product_detail", pk=product.pk)
