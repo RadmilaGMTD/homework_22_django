@@ -3,10 +3,13 @@ from django.core.paginator import Paginator
 from django.http import HttpResponseForbidden, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView, View
 
 from .forms import ProductForm
-from .models import Contact, Product
+from .models import Category, Contact, Product
+from .services import ProductService
 
 
 class ProductListView(ListView):
@@ -27,6 +30,9 @@ class ProductListView(ListView):
         free_page_number = self.request.GET.get("free_page")
         context["free_products"] = free_paginator.get_page(free_page_number)
         return context
+
+    def get_queryset(self):
+        return ProductService.get_products_from_cache()
 
 
 class ProductDetailView(LoginRequiredMixin, DetailView):
@@ -92,3 +98,14 @@ class ProductPublicationView(PermissionRequiredMixin, View):
         product.is_published = False
         product.save()
         return redirect("catalog:product_detail", pk=product.pk)
+
+
+@method_decorator(cache_page(60), name="dispatch")
+class CategoryDetailView(LoginRequiredMixin, DetailView):
+    model = Category
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        category_id = self.object.id
+        context["category"] = ProductService.product_in_category(category_id)
+        return context
